@@ -87,8 +87,8 @@ class LipSyncGenerator:
             sys.exit(1)
         
         try:
-            # Import Wav2Lip model architecture
-            from models import Wav2Lip
+            # Import Wav2Lip model architecture from static file
+            from wav2lip_model import Wav2Lip
             
             print(f"Loading checkpoint from {self.config.checkpoint_path}")
             checkpoint = torch.load(self.config.checkpoint_path, 
@@ -106,175 +106,10 @@ class LipSyncGenerator:
             
             print("✓ Model loaded successfully")
             
-        except ImportError:
-            print("\nError: Wav2Lip model architecture not found.")
-            print("Downloading Wav2Lip repository...")
-            self._setup_wav2lip_repo()
-            # Retry loading
-            from models import Wav2Lip
-            checkpoint = torch.load(self.config.checkpoint_path, map_location=self.device)
-            self.model = Wav2Lip()
-            if "state_dict" in checkpoint:
-                self.model.load_state_dict(checkpoint["state_dict"])
-            else:
-                self.model.load_state_dict(checkpoint)
-            self.model = self.model.to(self.device)
-            self.model.eval()
-            print("✓ Model loaded successfully")
-            
         except Exception as e:
             print(f"\nError loading model: {str(e)}")
+            print("\nMake sure wav2lip_model.py is in the same directory as this script.")
             sys.exit(1)
-    
-    def _setup_wav2lip_repo(self):
-        """Clone and setup Wav2Lip repository for model architecture"""
-        import urllib.request
-        import zipfile
-        
-        print("Setting up Wav2Lip model files...")
-        
-        # Create minimal model architecture inline to avoid dependency
-        models_dir = Path("models")
-        models_dir.mkdir(exist_ok=True)
-        
-        # Create Wav2Lip model architecture file
-        wav2lip_code = '''import torch
-from torch import nn
-from torch.nn import functional as F
-
-class Conv2d(nn.Module):
-    def __init__(self, cin, cout, kernel_size, stride, padding, residual=False, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.conv_block = nn.Sequential(
-                            nn.Conv2d(cin, cout, kernel_size, stride, padding),
-                            nn.BatchNorm2d(cout)
-                            )
-        self.act = nn.ReLU()
-        self.residual = residual
-
-    def forward(self, x):
-        out = self.conv_block(x)
-        if self.residual:
-            out += x
-        return self.act(out)
-
-class Wav2Lip(nn.Module):
-    def __init__(self):
-        super(Wav2Lip, self).__init__()
-
-        self.face_encoder_blocks = nn.ModuleList([
-            nn.Sequential(Conv2d(6, 16, kernel_size=7, stride=1, padding=3)),
-            
-            nn.Sequential(Conv2d(16, 32, kernel_size=3, stride=2, padding=1),
-            Conv2d(32, 32, kernel_size=3, stride=1, padding=1, residual=True),
-            Conv2d(32, 32, kernel_size=3, stride=1, padding=1, residual=True)),
-
-            nn.Sequential(Conv2d(32, 64, kernel_size=3, stride=2, padding=1),
-            Conv2d(64, 64, kernel_size=3, stride=1, padding=1, residual=True),
-            Conv2d(64, 64, kernel_size=3, stride=1, padding=1, residual=True),
-            Conv2d(64, 64, kernel_size=3, stride=1, padding=1, residual=True)),
-
-            nn.Sequential(Conv2d(64, 128, kernel_size=3, stride=2, padding=1),
-            Conv2d(128, 128, kernel_size=3, stride=1, padding=1, residual=True),
-            Conv2d(128, 128, kernel_size=3, stride=1, padding=1, residual=True)),
-
-            nn.Sequential(Conv2d(128, 256, kernel_size=3, stride=2, padding=1),
-            Conv2d(256, 256, kernel_size=3, stride=1, padding=1, residual=True),
-            Conv2d(256, 256, kernel_size=3, stride=1, padding=1, residual=True)),
-
-            nn.Sequential(Conv2d(256, 512, kernel_size=3, stride=2, padding=1),
-            Conv2d(512, 512, kernel_size=3, stride=1, padding=1, residual=True),),
-            
-            nn.Sequential(Conv2d(512, 512, kernel_size=3, stride=1, padding=0),
-            Conv2d(512, 512, kernel_size=1, stride=1, padding=0)),])
-
-        self.audio_encoder = nn.Sequential(
-            Conv2d(1, 32, kernel_size=3, stride=1, padding=1),
-            Conv2d(32, 32, kernel_size=3, stride=1, padding=1, residual=True),
-            Conv2d(32, 32, kernel_size=3, stride=1, padding=1, residual=True),
-
-            Conv2d(32, 64, kernel_size=3, stride=(3, 1), padding=1),
-            Conv2d(64, 64, kernel_size=3, stride=1, padding=1, residual=True),
-            Conv2d(64, 64, kernel_size=3, stride=1, padding=1, residual=True),
-
-            Conv2d(64, 128, kernel_size=3, stride=3, padding=1),
-            Conv2d(128, 128, kernel_size=3, stride=1, padding=1, residual=True),
-            Conv2d(128, 128, kernel_size=3, stride=1, padding=1, residual=True),
-
-            Conv2d(128, 256, kernel_size=3, stride=(3, 2), padding=1),
-            Conv2d(256, 256, kernel_size=3, stride=1, padding=1, residual=True),
-
-            Conv2d(256, 512, kernel_size=3, stride=1, padding=0),
-            Conv2d(512, 512, kernel_size=1, stride=1, padding=0),)
-
-        self.face_decoder_blocks = nn.ModuleList([
-            nn.Sequential(Conv2d(512, 512, kernel_size=1, stride=1, padding=0),),
-
-            nn.Sequential(Conv2d(1024, 512, kernel_size=3, stride=1, padding=1, residual=True),),
-
-            nn.Sequential(Conv2d(1024, 512, kernel_size=3, stride=1, padding=1, residual=True),
-            Conv2d(512, 256, kernel_size=3, stride=1, padding=1, residual=True),),
-
-            nn.Sequential(Conv2d(512, 256, kernel_size=3, stride=1, padding=1, residual=True),
-            Conv2d(256, 128, kernel_size=3, stride=1, padding=1, residual=True),),
-
-            nn.Sequential(Conv2d(256, 128, kernel_size=3, stride=1, padding=1, residual=True),
-            Conv2d(128, 64, kernel_size=3, stride=1, padding=1, residual=True),),
-
-            nn.Sequential(Conv2d(128, 64, kernel_size=3, stride=1, padding=1, residual=True),
-            Conv2d(64, 32, kernel_size=3, stride=1, padding=1, residual=True),),])
-
-        self.output_block = nn.Sequential(Conv2d(64, 32, kernel_size=3, stride=1, padding=1, residual=True),
-            nn.Conv2d(32, 3, kernel_size=1, stride=1, padding=0),
-            nn.Sigmoid()) 
-
-    def forward(self, audio_sequences, face_sequences):
-        # audio_sequences = (B, T, 1, 80, 16)
-        B = audio_sequences.size(0)
-
-        input_dim_size = len(face_sequences.size())
-        if input_dim_size > 4:
-            audio_sequences = torch.cat([audio_sequences[:, i] for i in range(audio_sequences.size(1))], dim=0)
-            face_sequences = torch.cat([face_sequences[:, :, i] for i in range(face_sequences.size(2))], dim=0)
-
-        audio_embedding = self.audio_encoder(audio_sequences) # B, 512, 1, 1
-
-        feats = []
-        x = face_sequences
-        for f in self.face_encoder_blocks:
-            x = f(x)
-            feats.append(x)
-
-        x = audio_embedding
-        for f in self.face_decoder_blocks:
-            x = f(x)
-            try:
-                x = torch.cat((x, feats[-1]), dim=1)
-            except Exception as e:
-                print(x.size())
-                print(feats[-1].size())
-                raise e
-            
-            feats.pop()
-            x = F.interpolate(x, scale_factor=2, mode='bilinear', align_corners=True)
-
-        x = self.output_block(x)
-
-        if input_dim_size > 4:
-            x = torch.split(x, B, dim=0) # [(B, C, H, W)]
-            outputs = torch.stack(x, dim=2) # (B, C, T, H, W)
-
-        else:
-            outputs = x
-            
-        return outputs
-'''
-        
-        # Write the model file
-        with open("models.py", "w") as f:
-            f.write(wav2lip_code)
-        
-        print("✓ Wav2Lip model architecture created")
     
     def generate_audio_from_text(self, text, output_path, lang='en'):
         """Generate audio from text using gTTS"""
@@ -309,7 +144,8 @@ class Wav2Lip(nn.Module):
         try:
             audio, sr = librosa.load(audio_path, sr=None)
             return len(audio) / sr
-        except:
+        except Exception as e:
+            print(f"Warning: Could not determine audio duration: {str(e)}")
             return 0
     
     def preprocess_image(self, image_path):

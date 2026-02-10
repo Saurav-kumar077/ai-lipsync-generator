@@ -14,7 +14,7 @@ A complete AI-powered tool that converts text to speech and generates realistic 
 ## 📋 Requirements
 
 ### System Requirements
-- Python 3.7-3.9 (recommended)
+- Python 3.8-3.12 (recommended)
 - ffmpeg (for video processing)
 - 8GB+ RAM recommended
 - Works on Windows, Linux, and macOS
@@ -335,7 +335,7 @@ For issues and questions:
 
 ## 🚦 Quick Start Checklist
 
-- [ ] Install Python 3.7-3.9
+- [ ] Install Python 3.8-3.12
 - [ ] Install ffmpeg
 - [ ] Clone this repository
 - [ ] Run `pip install -r requirements.txt`

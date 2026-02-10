@@ -136,8 +136,8 @@ def main():
     print("\nAI Lip-Sync Generator - Model Setup\n")
     
     # Check Python version
-    if sys.version_info < (3, 7) or sys.version_info >= (3, 10):
-        print("Warning: This project is tested with Python 3.7-3.9")
+    if sys.version_info < (3, 8) or sys.version_info >= (3, 13):
+        print("Warning: This project is tested with Python 3.8-3.12")
         print(f"You are using Python {sys.version_info.major}.{sys.version_info.minor}")
         print("Continuing anyway...\n")
     
