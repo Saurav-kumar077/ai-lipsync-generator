@@ -1,0 +1,61 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Models (large files)
+models/*.pth
+models/*.pt
+models/*.ckpt
+models/*.pkl
+
+# Generated outputs
+outputs/videos/*.mp4
+outputs/videos/*.avi
+outputs/videos/*.mov
+
+# User inputs (except .gitkeep)
+inputs/images/*
+!inputs/images/.gitkeep
+inputs/audio/*
+!inputs/audio/.gitkeep
+
+# Temporary files
+*.tmp
+temp/
+*.wav.tmp
+*.mp4.tmp
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
