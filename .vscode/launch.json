@@ -1,0 +1,72 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Generate Lip-Sync (Demo Text)",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/generate_lipsync.py",
+            "args": [
+                "--text",
+                "Hello! This is a demonstration of AI-powered lip-sync video generation. Welcome to the future of digital content creation!",
+                "--image",
+                "inputs/images/demo.jpg"
+            ],
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "env": {
+                "PYTHONUNBUFFERED": "1"
+            }
+        },
+        {
+            "name": "Generate Lip-Sync (UNIVO Transcript)",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/generate_lipsync.py",
+            "args": [
+                "--text_file",
+                "examples/univo_transcript.txt",
+                "--image",
+                "inputs/images/demo.jpg"
+            ],
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "env": {
+                "PYTHONUNBUFFERED": "1"
+            }
+        },
+        {
+            "name": "Generate from Custom Audio",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/generate_lipsync.py",
+            "args": [
+                "--audio",
+                "inputs/audio/speech.wav",
+                "--image",
+                "inputs/images/demo.jpg"
+            ],
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "env": {
+                "PYTHONUNBUFFERED": "1"
+            }
+        },
+        {
+            "name": "Download Models",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/download_models.py",
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+        {
+            "name": "Debug: Current Python File",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "justMyCode": true
+        }
+    ]
+}
