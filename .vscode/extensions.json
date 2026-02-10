@@ -1,0 +1,17 @@
+# VS Code Extension Recommendations for AI Lip-Sync Generator
+
+## Recommended Extensions
+
+### Essential
+- **Python** (ms-python.python) - Python IntelliSense, linting, debugging
+- **Pylance** (ms-python.vscode-pylance) - Fast Python language support
+
+### Helpful
+- **Better Comments** (aaron-bond.better-comments) - Color-coded comments
+- **Path Intellisense** (christian-kohler.path-intellisense) - File path autocomplete
+- **Material Icon Theme** (PKief.material-icon-theme) - Better file icons
+
+### Optional
+- **Python Indent** (KevinRose.vsc-python-indent) - Better Python indentation
+- **autoDocstring** (njpwerner.autodocstring) - Generate docstrings
+- **Error Lens** (usernamehw.errorlens) - Inline error highlighting

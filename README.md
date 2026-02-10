@@ -2,6 +2,16 @@
 
 A complete AI-powered tool that converts text to speech and generates realistic lip-synced videos from static images. Optimized for CPU-only processing and handles videos under 1 minute efficiently.
 
+## 🚀 Quick Start
+
+**Want to run this in VS Code right now?**
+- 📖 **[5-Minute Quick Start Guide](QUICKSTART.md)** - Get up and running fast!
+- 💻 **[Full VS Code Setup Guide](VSCODE_SETUP.md)** - Complete instructions for demonstration
+
+**Or continue reading below for detailed setup...**
+
+---
+
 ## 🎯 Features
 
 - **Text-to-Speech (TTS)**: Convert any text to natural-sounding speech using Google TTS
@@ -343,6 +353,20 @@ For issues and questions:
 - [ ] Place your image in `inputs/images/`
 - [ ] Run `python generate_lipsync.py --text "Test" --image inputs/images/your_image.jpg`
 - [ ] Check `outputs/videos/` for your generated video!
+
+## 💻 Using VS Code?
+
+We've created special guides for VS Code users:
+
+- **[QUICKSTART.md](QUICKSTART.md)** - 5-minute setup for quick demos
+- **[VSCODE_SETUP.md](VSCODE_SETUP.md)** - Complete VS Code guide with:
+  - One-click run configurations
+  - Integrated terminal commands
+  - Task automation
+  - Debugging setup
+  - Demo tips and tricks
+
+The project includes VS Code configurations in `.vscode/` folder for easy development and demonstration!
 
 ---
 

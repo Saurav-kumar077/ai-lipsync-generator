@@ -46,8 +46,8 @@ temp/
 *.wav.tmp
 *.mp4.tmp
 
-# IDE
-.vscode/
+# IDE - Keep .vscode for demonstration purposes
+# .vscode/ is intentionally NOT ignored so users can use pre-configured settings
 .idea/
 *.swp
 *.swo

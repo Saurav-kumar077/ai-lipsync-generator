@@ -1,0 +1,142 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Install Dependencies",
+            "type": "shell",
+            "command": "${command:python.interpreterPath}",
+            "args": [
+                "-m",
+                "pip",
+                "install",
+                "-r",
+                "requirements.txt"
+            ],
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Download Models",
+            "type": "shell",
+            "command": "${command:python.interpreterPath}",
+            "args": [
+                "download_models.py"
+            ],
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Generate Demo Video",
+            "type": "shell",
+            "command": "${command:python.interpreterPath}",
+            "args": [
+                "generate_lipsync.py",
+                "--text",
+                "Hello! This is a quick demonstration of AI lip-sync technology.",
+                "--image",
+                "inputs/images/demo.jpg"
+            ],
+            "group": "test",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Generate from UNIVO Transcript",
+            "type": "shell",
+            "command": "${command:python.interpreterPath}",
+            "args": [
+                "generate_lipsync.py",
+                "--text_file",
+                "examples/univo_transcript.txt",
+                "--image",
+                "inputs/images/demo.jpg"
+            ],
+            "group": "test",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Create Virtual Environment",
+            "type": "shell",
+            "command": "python",
+            "args": [
+                "-m",
+                "venv",
+                "venv"
+            ],
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Open Output Folder",
+            "type": "shell",
+            "windows": {
+                "command": "explorer",
+                "args": [
+                    "outputs\\videos"
+                ]
+            },
+            "linux": {
+                "command": "xdg-open",
+                "args": [
+                    "outputs/videos"
+                ]
+            },
+            "osx": {
+                "command": "open",
+                "args": [
+                    "outputs/videos"
+                ]
+            },
+            "presentation": {
+                "reveal": "silent",
+                "panel": "shared"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Check Python Version",
+            "type": "shell",
+            "command": "${command:python.interpreterPath}",
+            "args": [
+                "--version"
+            ],
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Check ffmpeg Installation",
+            "type": "shell",
+            "command": "ffmpeg",
+            "args": [
+                "-version"
+            ],
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "problemMatcher": []
+        }
+    ]
+}
