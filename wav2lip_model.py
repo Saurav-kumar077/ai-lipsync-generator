@@ -170,8 +170,9 @@ class Wav2Lip(nn.Module):
             try:
                 x = torch.cat((x, feats[-1]), dim=1)
             except Exception as e:
-                print(f"Error concatenating features: {x.size()} and {feats[-1].size()}")
-                raise e
+                raise RuntimeError(
+                    f"Error concatenating features: tensor sizes {x.size()} and {feats[-1].size()} are incompatible"
+                ) from e
             
             feats.pop()
             x = F.interpolate(x, scale_factor=2, mode='bilinear', align_corners=True)

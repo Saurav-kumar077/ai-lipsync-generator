@@ -176,19 +176,29 @@ class LipSyncGenerator:
             boxes[i] = np.mean(window, axis=0).astype(int)
         return boxes
     
-    def face_detect(self, images):
-        """Detect faces in images (simplified version for single static image)"""
-        # For a static image, we'll use the whole face
-        # In production, use a proper face detector like dlib or face_recognition
-        batch_size = self.config.face_det_batch_size
+    def get_face_region(self, images):
+        """
+        Get face region from images using center crop.
         
-        print("Detecting faces...")
+        WARNING: This is a simplified implementation that uses center cropping
+        instead of actual face detection. For production use, integrate a proper
+        face detector like dlib, face_recognition, or MediaPipe.
+        
+        Args:
+            images: List of images to process
+            
+        Returns:
+            List of face region coordinates [y1, y2, x1, x2]
+        """
+        print("Detecting face region (using center crop)...")
+        print("  Note: This uses a simplified center crop method.")
+        print("  For best results, ensure the face is centered in the image.")
+        
         results = []
         
         for image in images:
             h, w = image.shape[:2]
             # Use center crop as a simple "face detection"
-            # In production, use proper face detection
             size = min(h, w)
             y = (h - size) // 2
             x = (w - size) // 2
@@ -229,8 +239,8 @@ class LipSyncGenerator:
         print("\nPreparing video frames...")
         frames = [img] * num_frames
         
-        # Detect faces
-        face_coords = self.face_detect([img])
+        # Get face region
+        face_coords = self.get_face_region([img])
         
         if len(face_coords) == 0:
             print("✗ Error: No face detected in image")
